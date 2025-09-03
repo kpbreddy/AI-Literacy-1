@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Literacy Training - Interactive Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            padding: 60px;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            margin-bottom: 25px;
+            color: #ffd93d;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #74b9ff;
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .hierarchy {
+            text-align: left;
+            font-family: monospace;
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            transition: width 0.3s ease;
+            z-index: 1001;
+        }
+
+        .comparison-table {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .comparison-table th {
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: bold;
+        }
+
+        .highlight {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .neural-network {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .neuron {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .connection {
+            width: 100px;
+            height: 2px;
+            background: #ffd93d;
+            position: relative;
+        }
+
+        .connection::after {
+            content: '→';
+            position: absolute;
+            right: -10px;
+            top: -10px;
+            font-size: 20px;
+            color: #ffd93d;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #ffd93d;
+        }
+
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #ffd93d;
+            z-index: -1;
+        }
+
+        .timeline-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .interactive-element {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .interactive-element:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            h2 {
+                font-size: 2em;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="progress-bar" id="progressBar"></div>
+        <div class="slide-counter" id="slideCounter">1 / 15</div>
+
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>🤖 AI Literacy Training</h1>
+            <p class="subtitle">Bridging the Gap from Traditional ML to Generative AI</p>
+            <div class="highlight">
+                <p>Instructor: Raghav | Interactive Learning Session</p>
+            </div>
+            <p style="margin-top: 40px; font-size: 1.2em;">
+                "If you comprehend 50-60% of this content, you'll be abreast with cutting-edge knowledge"
+            </p>
+        </div>
+
+        <!-- Slide 2: AI Hierarchy -->
+        <div class="slide">
+            <h2>🏢 The AI Ecosystem</h2>
+            <div class="hierarchy">
+🌟 ARTIFICIAL INTELLIGENCE
+    ├── 🤖 MACHINE LEARNING
+    │   └── Statistical Models (Linear, Trees, etc.)
+    ├── 🧠 DEEP LEARNING  
+    │   └── Neural Networks (CNNs, RNNs, Transformers)
+    └── ✨ GENERATIVE AI
+        └── Creative Models (GPT, DALL-E, etc.)
+            </div>
+            <div class="highlight">
+                <p>🚀 Key Insight: We "pole-vaulted" directly into Gen AI era!</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Intelligence Types -->
+        <div class="slide">
+            <h2>🧠 What is Intelligence?</h2>
+            <div class="content-grid">
+                <div class="card interactive-element">
+                    <div class="icon">🎭</div>
+                    <h3>Creative</h3>
+                    <p>Steven Spielberg<br>Taylor Swift</p>
+                    <p><strong>AI:</strong> DALL-E, Midjourney</p>
+                </div>
+                <div class="card interactive-element">
+                    <div class="icon">🏃</div>
+                    <h3>Kinetic</h3>
+                    <p>Usain Bolt<br>Athletes</p>
+                    <p><strong>AI:</strong> Robotics</p>
+                </div>
+                <div class="card interactive-element">
+                    <div class="icon">🗣️</div>
+                    <h3>Linguistic</h3>
+                    <p>Polyglots<br>Translators</p>
+                    <p><strong>AI:</strong> ChatGPT, Claude</p>
+                </div>
+                <div class="card interactive-element">
+                    <div class="icon">🧮</div>
+                    <h3>Mathematical</h3>
+                    <p>Mathematicians<br>Scientists</p>
+                    <p><strong>AI:</strong> Calculators, ML</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Learning Process -->
+        <div class="slide">
+            <h2>🔄 Human vs. Machine Learning</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;">
+                <div>
+                    <h3>👨‍👩‍👧‍👦 Human Learning</h3>
+                    <div class="hierarchy">
+Parents → Teachers → Friends
+    ↓
+Social Media → Books → Internet
+    ↓
+🧠 EXPERIENCE (Ever-evolving)
+    ↓
+🤔 DECISION MAKING
+                    </div>
+                </div>
+                <div>
+                    <h3>🤖 Machine Learning</h3>
+                    <div class="hierarchy">
+📊 DATA → 🔄 ALGORITHM
+    ↓
+🎯 TRAINING → 📈 WTF*
+    ↓
+🔮 PREDICTION
+                    </div>
+                    <p style="margin-top: 20px;"><strong>*WTF = "What's The Function"</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Pattern Recognition -->
+        <div class="slide">
+            <h2>🎯 Pattern Recognition Challenge</h2>
+            <div class="content-grid">
+                <div class="card">
+                    <h3>✅ Easy Pattern</h3>
+                    <p style="font-size: 1.5em; margin: 20px 0;">1, 4, 9, 16, 25</p>
+                    <p><strong>Answer:</strong> Y = X²</p>
+                </div>
+                <div class="card">
+                    <h3>❌ Impossible Pattern</h3>
+                    <p style="font-size: 1.5em; margin: 20px 0;">2, 1, 100, 5, 6, 10</p>
+                    <p><strong>Answer:</strong> ???</p>
+                </div>
+            </div>
+            <div class="highlight">
+                <p>🎯 Machines excel where human pattern recognition fails!</p>
+                <p>1 million data points × 10 features = Human: Impossible | AI: Possible</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Loan Prediction -->
+        <div class="slide">
+            <h2>💰 The Loan Prediction Example</h2>
+            <div class="comparison-table">
+                <table>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Value</th>
+                        <th>Weight</th>
+                    </tr>
+                    <tr>
+                        <td>Age</td>
+                        <td>30 years</td>
+                        <td>W₁</td>
+                    </tr>
+                    <tr>
+                        <td>Salary</td>
+                        <td>$190,000</td>
+                        <td>W₂</td>
+                    </tr>
+                    <tr>
+                        <td>Country</td>
+                        <td>USA</td>
+                        <td>W₃</td>
+                    </tr>
+                    <tr>
+                        <td>Gender</td>
+                        <td>Female</td>
+                        <td>W₄</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="highlight">
+                <p><strong>Formula:</strong> Loan = (W₁×Age) + (W₂×Salary) + (W₃×Country) + (W₄×Gender) + Bias</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: ML vs DL -->
+        <div class="slide">
+            <h2>🧠 Why Deep Learning?</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+                <div class="card">
+                    <h3>📊 Traditional ML</h3>
+                    <p><strong>Structured Data (2D)</strong></p>
+                    <div class="hierarchy">
+| Age | Salary | Country | Loan |
+|-----|--------|---------|------|
+| 25  | 100K   | USA     | Yes  |
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>🧠 Deep Learning</h3>
+                    <p><strong>Unstructured Data (3D+)</strong></p>
+                    <ul style="text-align: left; margin-top: 20px;">
+                        <li>📸 Images: Height × Width × RGB</li>
+                        <li>🎵 Audio: Time × Frequency × Amplitude</li>
+                        <li>📝 Text: Thousands of dimensions</li>
+                        <li>🎬 Videos: Height × Width × RGB × Time</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Marshall Speaker Analogy -->
+        <div class="slide">
+            <h2>🎵 The Marshall Speaker Analogy</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <p>Basic Radio Knobs</p>
+                    <p>Simple ML</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1K</div>
+                    <p>Professional Mixer</p>
+                    <p>Deep Learning</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">170B</div>
+                    <p>GPT-4 Parameters</p>
+                    <p>Generative AI</p>
+                </div>
+            </div>
+            <div class="highlight">
+                <p>🎛️ Each knob = Parameter (Weight or Bias)</p>
+                <p>More knobs = More control = Better output (but harder to understand!)</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Neural Network -->
+        <div class="slide">
+            <h2>🧠 Neural Network Architecture</h2>
+            <div class="neural-network">
+                <div class="neuron">X₁</div>
+                <div class="connection"></div>
+                <div class="neuron">H₁</div>
+                <div class="connection"></div>
+                <div class="neuron">Y</div>
+            </div>
+            <div class="neural-network">
+                <div class="neuron">X₂</div>
+                <div class="connection"></div>
+                <div class="neuron">H₂</div>
+                <div class="connection"></div>
+                <div style="width: 60px;"></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px;">
+                <div class="card">
+                    <h3>🧠 Human Neuron</h3>
+                    <p>Dendrites → Cell Body → Axon</p>
+                </div>
+                <div class="card">
+                    <h3>🤖 Artificial Neuron</h3>
+                    <p>Inputs → Aggregator → Output</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Black Box Problem -->
+        <div class="slide">
+            <h2>🔒 The Black Box Problem</h2>
+            <div class="hierarchy">
+📊 Input Data → [🔒 138 Million Parameters] → 📈 Output
+                    ↑
+            "We don't know what's happening here!"
+            </div>
+            <div class="content-grid">
+                <div class="card">
+                    <h3>❓ The Challenge</h3>
+                    <ul style="text-align: left;">
+                        <li>How did it decide?</li>
+                        <li>Which factors mattered?</li>
+                        <li>Can we trust it?</li>
+                        <li>Is it biased?</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>🔍 The Solutions</h3>
+                    <ul style="text-align: left;">
+                        <li>Explainable AI (XAI)</li>
+                        <li>LIME & SHAP techniques</li>
+                        <li>Human-in-the-loop</li>
+                        <li>Feature importance analysis</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Discriminative vs Generative -->
+        <div class="slide">
+            <h2>🎭 Discriminative vs. Generative AI</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+                <div class="card">
+                    <h3>Before 2020 (Discriminative)</h3>
+                    <ul style="text-align: left; margin-top: 20px;">
+                        <li>✅ "Is this a cat or dog?"</li>
+                        <li>✅ "What's in this image?"</li>
+                        <li>✅ "Classify this email as spam"</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>After 2020 (Generative)</h3>
+                    <ul style="text-align: left; margin-top: 20px;">
+                        <li>✨ "Create an image of a cat that never existed"</li>
+                        <li>✨ "Write a story about space pirates"</li>
+                        <li>✨ "Generate code for a web app"</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="highlight">
+                <p>🚀 The shift from recognition to creation!</p>
+            </div>
+        </div>
+
+        <!-- Slide 12: GPT-4 Stats -->
+        <div class="slide">
+            <h2>🚀 GPT-4 Mind-Blowing Stats</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">170B</div>
+                    <p>Parameters</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">120</div>
+                    <p>Layers</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">$M</div>
+                    <p>Training Cost</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">32</div>
+                    <p>Bits per Parameter</p>
+                </div>
+            </div>
+            <div class="highlight">
+                <p>💰 Why NVIDIA Got Rich: Hardware requirements exploded overnight!</p>
+            </div>
+        </div>
+
+        <!-- Slide 13: AI Types -->
+        <div class="slide">
+            <h2>🎯 AI Types - Where Are We?</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3>🎯 Narrow AI</h3>
+                    <p><strong>Current Reality</strong></p>
+                    <p>Knows pizza is food<br>❌ Doesn't know taste</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>🧠 General AI</h3>
+                    <p><strong>Future Goal</strong></p>
+                    <p>Understands concepts<br>Has consciousness</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>🚀 Super AI</h3>
+                    <p><strong>Distant Future</strong></p>
+                    <p>Self-evolving<br>Beyond human capability</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Challenges -->
+        <div class="slide">
+            <h2>⚠️ AI Challenges & Ethics</h2>
+            <div class="content-grid">
+                <div class="card">
+                    <div class="icon">🔒</div>
+                    <h3>Data Privacy</h3>
+                    <p>Cambridge Analytica<br>"No free lunch" reality</p>
+                </div>
+                <div class="card">
+                    <div class="icon">⚖️</div>
+                    <h3>Bias & Fairness</h3>
+                    <p>Amazon hiring algorithm<br>Historical discrimination</p>
+                </div>
+                <div class="card">
+                    <div class="icon">💼</div>
+                    <h3>Job Displacement</h3>
+                    <p>Work WITH AI<br>Continuous upskilling</p>
+                </div>
+                <div class="card">
+                    <div class="icon">🎭</div>
+                    <h3>Deepfakes</h3>
+                    <p>Misinformation<br>Artist rights violations</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Key Takeaways -->
+        <div class="slide">
+            <h2>💡 Key Takeaways</h2>
+            <div class="content-grid">
+                <div class="card">
+                    <h3>🔑 Fundamental Truths</h3>
+                    <ul style="text-align: left;">
+                        <li>AI = Pattern Recognition at Scale</li>
+                        <li>Data Quality Determines Everything</li>
+                        <li>We're Still in Narrow AI Phase</li>
+                        <li>Ethics Must Guide Development</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>🎯 Success Mindset</h3>
+                    <ul style="text-align: left;">
+                        <li>Work WITH AI, not against it</li>
+                        <li>Question everything</li>
+                        <li>Stay curious</li>
+                        <li>Think ethically</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="highlight">
+                <p>"We're not replacing human intelligence, we're augmenting it responsibly"</p>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-btn" onclick="previousSlide()">← Previous</button>
+            <button class="nav-btn" onclick="nextSlide()">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            // Update slide counter
+            document.getElementById('slideCounter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function previousSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+
+        // Interactive elements
+        document.querySelectorAll('.interactive-element').forEach(element => {
+            element.addEventListener('click', function() {
+                this.style.transform = 'scale(1.1) rotate(5deg)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 300);
+            });
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
