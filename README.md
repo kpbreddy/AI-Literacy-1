@@ -20,12 +20,12 @@ A comprehensive step-by-step guide for mastering AI and Machine Learning concept
 - Go to `Machine-Learning` folder → `Supervised` folder
 - Study `machine_learning_presentation.html` thoroughly
 - Complete all associated quizzes
-- Take notes on key supervised learning algorithms
+- Take notes on key supervised learning algorithms and unsupervised algorithms
 
 ### 4. Reinforcement Learning
 - In `Machine-Learning` folder → `reinforcement` folder
 - Review `deepracer-210926185930.pptx`
-- Focus on RL concepts and AWS DeepRacer applications
+- Focus on RL concepts and DeepRacer applications
 
 ## Phase 3: Hands-on Practice (Optional Advanced Track)
 
